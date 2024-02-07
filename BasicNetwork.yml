@@ -106,3 +106,26 @@ Resources:
     Properties:
       SubnetId: !Ref SecondPublicSubnet
       RouteTableId: !Ref PublicRouteTable
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref myVPC
+      Tags:
+      - Key: stack
+        Value: production
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
+  FirstPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref FirstPrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
+  SecondPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SecondPrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
