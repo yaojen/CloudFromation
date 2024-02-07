@@ -1,0 +1,68 @@
+Parameters:
+  VpcCIDR:
+    Type: String
+    Default: 10.1.0.0/16
+    Description: 'pleals input VPCCIDR'
+  FirstPublicCIDR:
+    Type: String
+    Default: 10.1.1.0/24
+    Description: 'please input first public subnet CIDR'
+  SecondPublicCIDR:
+    Type: String
+    Default: 10.1.2.0/24
+    Description: 'please input Second public subnet CIDR'
+  FirstPrivateCIDR:
+    Type: String
+    Default: 10.1.3.0/24
+    Description: 'please input first private subnet CIDR'
+  SecondPrivateCIDR:
+    Type: String
+    Default: 10.1.4.0/24
+    Description: 'please input Second Private subnet CIDR'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Lable:
+          default:'kevin test'
+        Parameters:
+          - VpcCIDR
+          - FirstPublicCIDR
+          - SecondPublicCIDR
+          - FirstPrivateCIDR
+          - SecondPrivateCIDR
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsHostnames: 'true'
+      EnableDnsSupport: 'true'
+      Tags:
+      - Key: stack
+        Value: production
+  FirstPublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: !Ref FirstPublicCIDR
+      AvailabilityZone: !Select [0,!GetAZs '' ]
+  SecondPublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: !Ref SecondPublicCIDR
+      AvailabilityZone: !Select [1,!GetAZs '']
+  FirstPrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: !Ref FirstPrivateCIDR
+      AvailabilityZone: !Select [0,!GetAZs '']
+  SecondPrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: !Ref SecondPrivateCIDR
+      AvailabilityZone: !Select [1,!GetAZs '']
+
+
