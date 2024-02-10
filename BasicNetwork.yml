@@ -46,6 +46,7 @@ Resources:
       VpcId: !Ref myVPC
       CidrBlock: !Ref FirstPublicCIDR
       AvailabilityZone: !Select [0,!GetAZs '' ]
+      MapPublicIpOnLaunch: true
   SecondPublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
@@ -133,6 +134,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: 'Allow public access to port 22'
+      VpcId: !Ref myVPC
       SecurityGroupIngress:
         - IpProtocol: 'tcp'
           FromPort: 22
@@ -142,3 +144,23 @@ Resources:
     Type: AWS::EC2::KeyPair
     Properties:
       KeyName: KevinKeyPair
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: 't3.micro'
+      ImageId: ami-03cceb19496c25679
+      KeyName: !Ref MyKeyPair
+      SubnetId: !Ref FirstPublicSubnet
+      SecurityGroupIds:
+        - !Ref SSHSecurityGroup
+  InstanceIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyInstance  
+Outputs:
+  FirstPublicSubnetInfo:
+    Description: Information about the public subnet
+    Value: !Ref FirstPublicSubnet
+  VPCInfo:
+    Description: vpc info
+    Value: !Ref myVPC
