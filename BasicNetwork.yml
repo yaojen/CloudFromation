@@ -140,6 +140,10 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: '0.0.0.0/0'
+        - IpProtocol: 'tcp'
+          FromPort: 80
+          ToPort: 80
+          CidrIp: '0.0.0.0/0'
   MyKeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
@@ -158,6 +162,11 @@ Resources:
           Ebs:
             VolumeSize: 30
             VolumeType: gp2
+      UserData: !Base64 |
+        #!/bin/bash -ex
+        sudo dnf install -y httpd
+        sudo systemctl start httpd
+        sudo systemctl enable httpd
   InstanceIP:
     Type: AWS::EC2::EIP
     Properties:
