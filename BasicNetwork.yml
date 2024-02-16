@@ -144,6 +144,10 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: '0.0.0.0/0'
+        - IpProtocol: icmp
+          FromPort: 8
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
   MyKeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
