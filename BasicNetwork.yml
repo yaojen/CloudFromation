@@ -19,6 +19,13 @@ Parameters:
     Type: String
     Default: 10.1.4.0/24
     Description: 'please input Second Private subnet CIDR'
+  InstanceAMI:
+    Type: String
+    AllowedValues:
+      - ami-03614aa887519d781
+      - ami-0a23a9827c6dab833
+    Default: ami-0a23a9827c6dab833
+    Description: '1st is AWS Linux 2, 2nd is AWS Linux 2023'
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -156,7 +163,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: 't3.micro'
-      ImageId: ami-03cceb19496c25679
+      ImageId: !Ref InstanceAMI
       KeyName: !Ref MyKeyPair
       SubnetId: !Ref FirstPublicSubnet
       SecurityGroupIds:
